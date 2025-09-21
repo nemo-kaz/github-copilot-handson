@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>ToDo編集</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', 'Montserrat', sans-serif;
+            background: linear-gradient(120deg, #f8fafc 0%, #e0e7ff 100%);
+            margin: 0; padding: 0;
+        }
+        h1 {
+            text-align: center;
+            font-family: 'Montserrat', sans-serif;
+            margin-top: 32px;
+            color: #4f46e5;
+            letter-spacing: 2px;
+        }
+        .edit-card {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px #6366f122;
+            padding: 32px 28px 24px 28px;
+            margin: 40px auto 0 auto;
+            max-width: 400px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        input[name="title"], select[name="status"] {
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid #c7d2fe;
+            font-size: 1rem;
+        }
+        button[type="submit"] {
+            background: #6366f1;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 0;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 2px 8px #6366f133;
+            transition: background 0.2s, transform 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        button[type="submit"]:hover {
+            background: #4338ca;
+            transform: translateY(-2px) scale(1.05);
+        }
+        .back-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 24px;
+            color: #6366f1;
+            text-decoration: none;
+            font-size: 1rem;
+            gap: 6px;
+            transition: color 0.2s;
+        }
+        .back-link:hover {
+            color: #4338ca;
+        }
+        @media (max-width: 600px) {
+            .edit-card { max-width: 98vw; padding: 18px 4vw; }
+        }
+    </style>
+</head>
+<body>
+    <h1>ToDo編集</h1>
+    <div class="edit-card">
+        <form action="" method="post">
+            <input type="text" name="title" value="{{item.title}}" required>
+            <select name="status">
+                {% for s in Status %}
+                <option value="{{s.value}}" {% if item.status == s.value %}selected{% endif %}>{{s.value}}</option>
+                {% endfor %}
+            </select>
+            <button type="submit"><i class="fa-solid fa-floppy-disk"></i> 保存</button>
+        </form>
+        <a href="/" class="back-link"><i class="fa-solid fa-arrow-left"></i> 戻る</a>
+    </div>
+</body>
+</html>

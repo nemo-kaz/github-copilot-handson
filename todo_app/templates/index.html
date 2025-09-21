@@ -4,11 +4,128 @@
 <head>
     <meta charset="UTF-8">
     <title>ToDoアプリ</title>
+    <!-- Google Fonts & FontAwesome CDN -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
-        .status-block { float: left; width: 30%; margin-right: 2%; }
-        .status-block h2 { border-bottom: 1px solid #ccc; }
-        .todo-item { margin-bottom: 8px; }
-        form.inline { display: inline; }
+        body {
+            font-family: 'Roboto', 'Montserrat', sans-serif;
+            background: linear-gradient(120deg, #f8fafc 0%, #e0e7ff 100%);
+            margin: 0; padding: 0;
+        }
+        h1 {
+            text-align: center;
+            font-family: 'Montserrat', sans-serif;
+            margin-top: 32px;
+            color: #4f46e5;
+            letter-spacing: 2px;
+        }
+        form[action="/add"] {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 32px 0 16px 0;
+        }
+        input[name="title"] {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid #c7d2fe;
+            font-size: 1rem;
+            width: 180px;
+        }
+        select[name="status"] {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid #c7d2fe;
+            font-size: 1rem;
+        }
+        button[type="submit"] {
+            background: #6366f1;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 18px;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 2px 8px #6366f133;
+            transition: background 0.2s, transform 0.2s;
+        }
+        button[type="submit"]:hover {
+            background: #4338ca;
+            transform: translateY(-2px) scale(1.05);
+        }
+        .status-block {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px #6366f122;
+            padding: 18px 12px 24px 12px;
+            margin: 0 2% 32px 0;
+            width: 30%;
+            float: left;
+            min-width: 220px;
+            transition: box-shadow 0.2s;
+        }
+        .status-block h2 {
+            border-bottom: 2px solid #c7d2fe;
+            padding-bottom: 8px;
+            margin-bottom: 18px;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
+        .status-block:nth-child(1) { border-top: 6px solid #f59e42; }
+        .status-block:nth-child(2) { border-top: 6px solid #38bdf8; }
+        .status-block:nth-child(3) { border-top: 6px solid #a3e635; }
+        .todo-item {
+            background: #f3f4f6;
+            border-radius: 12px;
+            margin-bottom: 14px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 8px #6366f111;
+            transition: box-shadow 0.2s;
+        }
+        .todo-item:hover {
+            box-shadow: 0 4px 16px #6366f122;
+        }
+        .todo-title {
+            flex: 1;
+            font-size: 1rem;
+            color: #222;
+        }
+        .todo-item.completed {
+            background: #e5e7eb;
+            color: #aaa;
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+        .todo-actions {
+            display: flex;
+            gap: 8px;
+        }
+        .icon-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #6366f1;
+            font-size: 1.1rem;
+            padding: 4px 6px;
+            border-radius: 6px;
+            transition: background 0.2s, color 0.2s, transform 0.2s;
+        }
+        .icon-btn:hover {
+            background: #6366f122;
+            color: #4338ca;
+            transform: scale(1.15);
+        }
+        .check-icon {
+            color: #22c55e;
+            margin-right: 8px;
+            font-size: 1.2rem;
+        }
+        @media (max-width: 900px) {
+            .status-block { width: 90%; float: none; margin: 0 auto 32px auto; }
+        }
     </style>
 </head>
 <body>
@@ -20,7 +137,7 @@
             <option value="{{s.value}}">{{s.value}}</option>
             {% endfor %}
         </select>
-        <button type="submit">追加</button>
+        <button type="submit"><i class="fa-solid fa-plus"></i> 追加</button>
     </form>
     <div style="overflow: hidden; margin-top: 24px;">
         {% for status, items in grouped.items() %}
@@ -28,12 +145,17 @@
             <h2>{{ status }}</h2>
             {% if items %}
                 {% for item in items %}
-                <div class="todo-item">
-                    {{ item.title }}
-                    <a href="/edit/{{item.id}}">編集</a>
-                    <form class="inline" action="/delete/{{item.id}}" method="post" onsubmit="return confirm('削除しますか？');">
-                        <button type="submit">削除</button>
-                    </form>
+                <div class="todo-item{% if item.status == 'Completed' %} completed{% endif %}">
+                    {% if item.status == 'Completed' %}
+                        <i class="fa-solid fa-check check-icon"></i>
+                    {% endif %}
+                    <span class="todo-title">{{ item.title }}</span>
+                    <div class="todo-actions">
+                        <a href="/edit/{{item.id}}" class="icon-btn" title="編集"><i class="fa-solid fa-pen"></i></a>
+                        <form class="inline" action="/delete/{{item.id}}" method="post" onsubmit="return confirm('削除しますか？');" style="display:inline;">
+                            <button type="submit" class="icon-btn" title="削除"><i class="fa-solid fa-trash"></i></button>
+                        </form>
+                    </div>
                 </div>
                 {% endfor %}
             {% else %}
