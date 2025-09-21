@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>ToDoアプリ</title>
+    <style>
+        .status-block { float: left; width: 30%; margin-right: 2%; }
+        .status-block h2 { border-bottom: 1px solid #ccc; }
+        .todo-item { margin-bottom: 8px; }
+        form.inline { display: inline; }
+    </style>
+</head>
+<body>
+    <h1>ToDoアプリ</h1>
+    <form action="/add" method="post">
+        <input type="text" name="title" placeholder="新しいToDo" required>
+        <select name="status">
+            {% for s in Status %}
+            <option value="{{s.value}}">{{s.value}}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">追加</button>
+    </form>
+    <div style="overflow: hidden; margin-top: 24px;">
+        {% for status, items in grouped.items() %}
+        <div class="status-block">
+            <h2>{{ status }}</h2>
+            {% for item in items %}
+            <div class="todo-item">
+                {{ item.title }}
+                <a href="/edit/{{item.id}}">編集</a>
+                <form class="inline" action="/delete/{{item.id}}" method="post" onsubmit="return confirm('削除しますか？');">
+                    <button type="submit">削除</button>
+                </form>
+            </div>
+            {% else %}
+            <div>なし</div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

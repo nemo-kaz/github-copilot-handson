@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>ToDo編集</title>
+</head>
+<body>
+    <h1>ToDo編集</h1>
+    <form action="" method="post">
+        <input type="text" name="title" value="{{item.title}}" required>
+        <select name="status">
+            {% for s in Status %}
+            <option value="{{s.value}}" {% if item.status == s.value %}selected{% endif %}>{{s.value}}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">保存</button>
+    </form>
+    <a href="/">戻る</a>
+</body>
+</html>
